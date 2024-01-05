@@ -1,12 +1,13 @@
+version: '3'
 
 services:
-    liveclass:
-        image: liveclass:latest
+    mirotalksfu:
+        image: mirotalk/sfu:latest
         build:
             context: .
             dockerfile: Dockerfile
-        container_name: liveclass
-        hostname: liveclass
+        container_name: mirotalksfu
+        hostname: mirotalksfu
         restart: unless-stopped
         volumes:
             - ./app/src/config.js:/src/app/src/config.js:ro
