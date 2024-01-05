@@ -1,12 +1,12 @@
 
 services:
     liveclass:
-        image: liveclass:latest
+        image: singhkaushik28/liveclasses:latest
         build:
             context: .
             dockerfile: Dockerfile
-        container_name: liveclass
-        hostname: liveclass
+        container_name: liveclasses
+        hostname: singhkaushik28
         restart: unless-stopped
         volumes:
             - ./app/src/config.js:/src/app/src/config.js:ro
