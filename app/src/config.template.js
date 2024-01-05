@@ -27,7 +27,7 @@ module.exports = {
     server: {
         listen: {
             // app listen on
-            ip: 'https://api.ipify.org',
+            ip: '0.0.0.0',
             port: process.env.PORT || 3010,
         },
         ssl: {
@@ -62,7 +62,8 @@ module.exports = {
                 By default, the presenter is identified as the first participant to join the room, distinguished by their username and UUID. 
                 Additional layers can be added to specify valid presenters and co-presenters by setting designated usernames.
             */
-            'Live Classes'
+            'Miroslav Pejic',
+            'miroslav.pejic.85@gmail.com',
         ],
         join_first: true, // Set to true for traditional behavior, false to prioritize presenters
     },
@@ -115,7 +116,7 @@ module.exports = {
         enabled: false,
         basePath: 'https://api.openai.com/v1/',
         apiKey: '',
-        model: 'text-davinci-003',
+        model: 'gpt-3.5-turbo-instruct',
         max_tokens: 1000,
         temperature: 0,
     },
