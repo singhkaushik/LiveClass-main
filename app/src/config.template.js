@@ -27,7 +27,7 @@ module.exports = {
     listenIps: [
         {
             ip: '0.0.0.0',
-            announcedIp: '127.0.0.1',  // Change the announced IP to 127.0.0.1
+            announcedIp: '180.151.82.2',  
         },
     ],
     server: {
