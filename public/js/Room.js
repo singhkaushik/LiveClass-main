@@ -456,12 +456,12 @@ function addChild(device, els) {
 // MICROPHONE VOLUME INDICATOR
 // ####################################################
 
-function getMicrophoneVolumeIndicator(stream) {
+async function getMicrophoneVolumeIndicator(stream) {
     if (isAudioContextSupported() && hasAudioTrack(stream)) {
         stopMicrophoneProcessing();
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         const microphone = audioContext.createMediaStreamSource(stream);
-        scriptProcessor = audioContext.createScriptProcessor(2048, 1, 1);
+        scriptProcessor = audioContext.createScriptProcessor(1024, 1, 1);
         scriptProcessor.onaudioprocess = function (event) {
             const inputBuffer = event.inputBuffer.getChannelData(0);
             let sum = 0;
@@ -495,7 +495,7 @@ function updateVolumeIndicator(volume) {
 }
 
 function isAudioContextSupported() {
-    return !!(window.AudioContext || window.webkitAudioContext || false);
+    return !!(window.AudioContext || window.webkitAudioContext);
 }
 
 function hasAudioTrack(mediaStream) {
