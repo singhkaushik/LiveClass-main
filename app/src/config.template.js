@@ -24,6 +24,12 @@ const getLocalIp = () => {
 // https://api.ipify.org
 
 module.exports = {
+    listenIps: [
+        {
+            ip: '0.0.0.0',
+            announcedIp: '127.0.0.1',  // Change the announced IP to 127.0.0.1
+        },
+    ],
     server: {
         listen: {
             // app listen on
