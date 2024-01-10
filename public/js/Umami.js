@@ -1,6 +1,7 @@
 'use strict';
 
-const url = 'https://sfu.liveclasses.duckdns.org/stats';
+// const url = 'https://localhost:3010/stats';
+const url = 'https://sfu.mirotalk.com/stats';
 
 fetch(url)
     .then((response) => {

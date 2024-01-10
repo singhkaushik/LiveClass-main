@@ -80,6 +80,9 @@ class Transcription {
         this.transcripts = [];
         this.isBgTransparent = false;
         this.isPinned = false;
+        this.isHidden = true;
+        this.isPersistentMode = false;
+        this.isPersistent = false;
         this.showOnMessage = true;
     }
 
@@ -98,10 +101,12 @@ class Transcription {
 
             this.transcription.onstart = function () {
                 console.log('Transcription started');
-                transcriptionSpeechStart.style.display = 'none';
-                transcriptionSpeechStop.style.display = 'block';
+                hide(transcriptionSpeechStart);
+                show(transcriptionSpeechStop);
                 setColor(transcriptionSpeechStatus, 'lime');
-                userLog('info', 'Transcription started', 'top-end');
+                !transcription.isPersistentMode
+                    ? userLog('info', 'Transcription started', 'top-end')
+                    : (transcription.isPersistent = true);
             };
 
             this.transcription.onresult = (e) => {
@@ -129,16 +134,29 @@ class Transcription {
             };
 
             this.transcription.onerror = function (event) {
-                userLog('error', `Transcription error ${event.error}`, 'top-end', 6000);
                 console.error('Transcription error', event.error);
+                if (!transcription.isPersistent || !transcription.isPersistentMode)
+                    userLog('error', `Transcription error ${event.error}`, 'top-end', 6000);
             };
 
             this.transcription.onend = function () {
                 console.log('Transcription stopped');
-                transcriptionSpeechStop.style.display = 'none';
-                transcriptionSpeechStart.style.display = 'block';
+                hide(transcriptionSpeechStop);
+                show(transcriptionSpeechStart);
                 setColor(transcriptionSpeechStatus, 'white');
-                userLog('info', 'Transcription stopped', 'top-end');
+                // Prevent stopping in the absence of speech...
+                if (
+                    transcription.isPersistentMode &&
+                    transcription.isPersistent &&
+                    transcription.transcriptionRunning
+                ) {
+                    setTimeout(() => {
+                        transcription.start();
+                    }, 2000);
+                } else {
+                    transcription.isPersistent = false;
+                    userLog('info', 'Transcription stopped', 'top-end');
+                }
             };
 
             this.isTranscriptionSupported = true;
@@ -165,9 +183,9 @@ class Transcription {
 
         const { peer_name, text_data } = transcriptionData;
         const time_stamp = rc.getTimeNow();
-        const avatar_image = rc.genAvatarSvg(peer_name, 32);
+        const avatar_image = rc.isValidEmail(peer_name) ? rc.genGravatar(peer_name) : rc.genAvatarSvg(peer_name, 32);
 
-        if (this.isHidden()) {
+        if (this.isHidden) {
             if (this.showOnMessage) {
                 this.toggle();
             } else {
@@ -212,19 +230,17 @@ class Transcription {
         }, duration);
     }
 
-    isHidden() {
-        return Boolean(transcriptionRoom.style.display === 'none' || transcriptionRoom.style.display === '');
-    }
-
     toggle() {
-        if (this.isHidden()) {
+        if (this.isHidden) {
             this.center();
             transcriptionRoom.style.display = 'block';
             rc.sound('open');
         } else {
             transcriptionRoom.style.display = 'none';
         }
+        this.isHidden = !this.isHidden;
         if (this.isPinned) this.unpinned();
+        resizeTranscriptionRoom();
     }
 
     toggleBg() {
@@ -312,6 +328,7 @@ class Transcription {
         this.isPinned = false;
         setColor(transcriptionTogglePinBtn, 'white');
         resizeVideoMedia();
+        resizeTranscriptionRoom();
         transcriptionRoom.style.resize = 'both';
         if (!rc.isMobileDevice) rc.makeDraggable(transcriptionRoom, transcriptionHeader);
     }
@@ -398,6 +415,7 @@ class Transcription {
 
     stop() {
         this.transcriptionRunning = false;
+        this.isPersistent = false;
         this.selectDisabled(false);
         this.transcription.stop();
     }
@@ -405,5 +423,6 @@ class Transcription {
     selectDisabled(disabled = false) {
         transcriptionLanguage.disabled = disabled;
         transcriptionDialect.disabled = disabled;
+        transcriptPersistentMode.disabled = disabled;
     }
 }

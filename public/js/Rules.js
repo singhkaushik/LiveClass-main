@@ -52,7 +52,7 @@ const BUTTONS = {
         sendVideoButton: true,
         muteVideoButton: true,
         muteAudioButton: true,
-        audioVolumeInput: true,
+        audioVolumeInput: true, // Disabled for mobile
         ejectButton: true,
     },
     videoOff: {
@@ -60,7 +60,7 @@ const BUTTONS = {
         sendFileButton: true,
         sendVideoButton: true,
         muteAudioButton: true,
-        audioVolumeInput: true,
+        audioVolumeInput: true, // Disabled for mobile
         ejectButton: true,
     },
     chat: {
@@ -97,8 +97,8 @@ function handleRules(isPresenter) {
         BUTTONS.videoOff.muteAudioButton = false;
         BUTTONS.videoOff.ejectButton = false;
         BUTTONS.consumerVideo.ejectButton = false;
-        BUTTONS.consumerVideo.muteAudioButton = false;
-        BUTTONS.consumerVideo.muteVideoButton = false;
+        //BUTTONS.consumerVideo.muteAudioButton = false;
+        //BUTTONS.consumerVideo.muteVideoButton = false;
         BUTTONS.whiteboard.whiteboardLockButton = false;
         //...
     } else {
@@ -125,25 +125,26 @@ function handleRules(isPresenter) {
         // ##################################
 
         // Room broadcasting
-        isBroadcastingEnabled = lsSettings.broadcasting;
+        isBroadcastingEnabled = localStorageSettings.broadcasting;
         switchBroadcasting.checked = isBroadcastingEnabled;
         rc.roomAction('broadcasting', true, false);
+        if (isBroadcastingEnabled) rc.toggleRoomBroadcasting();
         // Room lobby
-        isLobbyEnabled = lsSettings.lobby;
+        isLobbyEnabled = localStorageSettings.lobby;
         switchLobby.checked = isLobbyEnabled;
         rc.roomAction(isLobbyEnabled ? 'lobbyOn' : 'lobbyOff', true, false);
         // Room host-only-recording
-        hostOnlyRecording = lsSettings.host_only_recording;
+        hostOnlyRecording = localStorageSettings.host_only_recording;
         switchHostOnlyRecording.checked = hostOnlyRecording;
         rc.roomAction(hostOnlyRecording ? 'hostOnlyRecordingOn' : 'hostOnlyRecordingOff', true, false);
         // Room moderator
-        switchEveryoneMute.checked = lsSettings.moderator_audio_start_muted;
-        switchEveryoneHidden.checked = lsSettings.moderator_video_start_hidden;
-        switchEveryoneCantUnmute.checked = lsSettings.moderator_audio_cant_unmute;
-        switchEveryoneCantUnhide.checked = lsSettings.moderator_video_cant_unhide;
-        switchEveryoneCantShareScreen.checked = lsSettings.moderator_screen_cant_share;
-        switchEveryoneCantChatPrivately.checked = lsSettings.moderator_chat_cant_privately;
-        switchEveryoneCantChatChatGPT.checked = lsSettings.moderator_chat_cant_chatgpt;
+        switchEveryoneMute.checked = localStorageSettings.moderator_audio_start_muted;
+        switchEveryoneHidden.checked = localStorageSettings.moderator_video_start_hidden;
+        switchEveryoneCantUnmute.checked = localStorageSettings.moderator_audio_cant_unmute;
+        switchEveryoneCantUnhide.checked = localStorageSettings.moderator_video_cant_unhide;
+        switchEveryoneCantShareScreen.checked = localStorageSettings.moderator_screen_cant_share;
+        switchEveryoneCantChatPrivately.checked = localStorageSettings.moderator_chat_cant_privately;
+        switchEveryoneCantChatChatGPT.checked = localStorageSettings.moderator_chat_cant_chatgpt;
 
         // Update moderator settings...
         const moderatorData = {
@@ -179,7 +180,7 @@ function handleRulesBroadcasting() {
     BUTTONS.main.startVideoButton = false;
     BUTTONS.main.startScreenButton = false;
     BUTTONS.main.swapCameraButton = false;
-    BUTTONS.main.raiseHandButton = false;
+    //BUTTONS.main.raiseHandButton = false;
     BUTTONS.main.whiteboardButton = false;
     //BUTTONS.main.emojiRoomButton = false,
     BUTTONS.main.transcriptionButton = false;
@@ -207,7 +208,7 @@ function handleRulesBroadcasting() {
     elemDisplay('startScreenButton', false);
     elemDisplay('stopScreenButton', false);
     elemDisplay('swapCameraButton', false);
-    elemDisplay('raiseHandButton', false);
+    //elemDisplay('raiseHandButton', false);
     elemDisplay('whiteboardButton', false);
     //elemDisplay('emojiRoomButton', false);
     elemDisplay('transcriptionButton', false);
